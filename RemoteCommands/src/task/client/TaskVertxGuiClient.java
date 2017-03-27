@@ -25,7 +25,7 @@ import task.client.dispatcher.FirstDoublesDispatcher;
 import task.client.dispatcher.MostMatchesDispatcher;
 import task.client.dispatcher.SequentialDispatcher;
 import task.client.dispatcher.TaskDispatcher;
-import tasks.common.GenericSourceTask;
+import task.common.GenericSourceTask;
 
 public class TaskVertxGuiClient {
 	

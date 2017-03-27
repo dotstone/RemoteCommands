@@ -6,8 +6,8 @@ import java.util.List;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.net.NetServer;
 import io.vertx.core.net.NetSocket;
-import tasks.common.GenericSourceTask;
-import tasks.common.Task;
+import task.common.GenericSourceTask;
+import task.common.Task;
 
 public class TaskVerticle extends AbstractVerticle {
 	

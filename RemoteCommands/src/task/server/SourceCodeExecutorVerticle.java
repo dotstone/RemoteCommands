@@ -6,12 +6,11 @@ import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.net.NetServer;
 import io.vertx.core.net.NetSocket;
+import task.common.GenericSourceTask;
+import task.common.Task;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import tasks.common.GenericSourceTask;
-import tasks.common.Task;
 
 public class SourceCodeExecutorVerticle extends AbstractVerticle {
 	
