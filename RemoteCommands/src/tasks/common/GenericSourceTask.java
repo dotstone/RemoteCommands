@@ -2,7 +2,7 @@ package tasks.common;
 
 import java.util.function.Supplier;
 
-import net.openhft.compiler.CompilerUtils;
+import net.openhft.compiler.CachedCompiler;
 import task.server.TaskResult;
 
 public class GenericSourceTask<O> extends Task<O> {
@@ -12,10 +12,13 @@ public class GenericSourceTask<O> extends Task<O> {
 	}
 
 	public static <O>Task<O> fromFunctionSource(String className, String src) {
-		try {
-			Class<? extends Supplier<?>> aClass = CompilerUtils.CACHED_COMPILER.loadFromJava(className, src);
+		// Always create a new compiler to circumvent caching
+		ClassLoader loader = new ClassLoader() {
+		};
+		try(CachedCompiler compiler = new CachedCompiler(null, null)) {
+			Class<? extends Supplier<?>> aClass = compiler.loadFromJava(loader, className, src);
 			Supplier<O> supplier = (Supplier<O>) aClass.newInstance();
-			return new GenericSourceTask<O>(() -> supplier.get());
+			return new GenericSourceTask<O>(supplier);
 		} catch (ClassNotFoundException e) {
 			System.out.println("Class " + className + " was not found!");
 			return new CompletedTask<O>(TaskResult.forFailedTask("Cannot find class " + className));
@@ -36,5 +39,24 @@ public class GenericSourceTask<O> extends Task<O> {
 		String className = parts[0];
 		String source = parts[1];
 		return fromFunctionSource(className, source);
+	}
+	
+	public static String toMessage(String className, String source) {
+		return className + ":" + source;
+	}
+	
+	private static class TryingSupplier<O> implements Supplier<O> {
+		
+		private final Supplier<O> supplier;
+		
+		public TryingSupplier(Supplier<O> supplier) {
+			this.supplier = supplier;
+		}
+
+		@Override
+		public O get() {
+			return supplier.get();
+		}
+		
 	}
 }

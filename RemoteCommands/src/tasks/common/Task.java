@@ -14,6 +14,10 @@ public class Task<O> implements Supplier<TaskResult<O>> {
 
 	@Override
 	public TaskResult<O> get() {
-		return supplier.get();
+		try {
+			return supplier.get();
+		} catch(Throwable t) {
+			return TaskResult.forFailedTask("Code threw an " + t.getClass().getName() + ": " + t.getMessage());
+		}
 	} 
 }
