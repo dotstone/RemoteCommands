@@ -30,7 +30,6 @@ public class TaskVerticle extends AbstractVerticle {
 			
 			netSocket.handler(inBuffer -> {
 				String work = inBuffer.getString(0, inBuffer.length());
-				System.out.println("Work received: " + work); 
 				final Task<Object> task = GenericSourceTask.fromMessage(work);
 				TaskResult<Object> result = task.get();
 				if(result.isValid()) {
@@ -48,14 +47,13 @@ public class TaskVerticle extends AbstractVerticle {
 		try {
 			netServer.listen(port);
 		} catch(Exception e) {
-			System.out.println("!!!!!!!!!!!");
+			System.out.println("Failed to start server!");
+			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void stop() throws Exception {
-		for (NetSocket client : clients) {
-			client.close();
-		}		
+		clients.forEach(NetSocket::close);		
 	}
 }

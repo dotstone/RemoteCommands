@@ -2,6 +2,7 @@ package task.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.IntStream;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.net.NetClient;
@@ -23,7 +24,7 @@ public class ClientVerticle extends AbstractVerticle {
 
 	@Override
 	public void start() {
-		for(int port : TaskVertxGuiClient.PORTS) {
+		IntStream.of(TaskVertxGuiClient.PORTS).forEach(port -> {
 			NetClient netClient = vertx.createNetClient();
 
 			netClient.connect(port, TaskVertxGuiClient.SERVER_ADDR, asyncResult -> {
@@ -45,8 +46,8 @@ public class ClientVerticle extends AbstractVerticle {
 				netSocket.closeHandler(v -> {
 					this.taskVertxGuiClient.log("Connection closed: " + netSocket.remoteAddress());
 				});
-			});	
-		}
+			});
+		});
 	}
 
 	@Override
@@ -61,6 +62,7 @@ public class ClientVerticle extends AbstractVerticle {
 	private void receiveMessage(String msg, TaskDispatcher dispatcher) {
 		String result = dispatcher.messageReceived(msg);
 		if(result != null) {
+			this.taskVertxGuiClient.log("Final Result: " + result);
 			this.taskVertxGuiClient.messageArea.setText(result);
 		}
 	}

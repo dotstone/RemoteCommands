@@ -10,12 +10,14 @@ import io.vertx.core.net.NetSocket;
 public class MostMatchesDispatcher implements TaskDispatcher {
 	
 	private int outstanding;
+	private boolean resultSent;
 	
 	private Multiset<String> results;
 
 	public void sendMessages(Collection<NetSocket> netSockets, String msg) {
 		results = HashMultiset.create();
 		outstanding = netSockets.size();
+		resultSent = false;
 		netSockets.forEach(socket -> socket.write(msg));
 	}
 
@@ -30,6 +32,9 @@ public class MostMatchesDispatcher implements TaskDispatcher {
 	}
 
 	private String getResult() {
+		if(resultSent) {
+			return null;
+		}
 		String curResult = null;
 		int maxMatches = 0;
 		int distanceToNextBest = 0;			// track the count distance to the next best result
@@ -48,6 +53,7 @@ public class MostMatchesDispatcher implements TaskDispatcher {
 		}
 		if(outstanding == 0 || distanceToNextBest > outstanding) {
 			// Only take the result if there is no chance that another result can catch up
+			resultSent = true;
 			return curResult;
 		}
 		return null;

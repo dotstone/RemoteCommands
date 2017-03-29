@@ -3,7 +3,6 @@ package task.client;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -15,8 +14,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.DefaultCaret;
-
-import com.google.common.collect.Lists;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.net.NetSocket;
@@ -31,7 +28,7 @@ public class TaskVertxGuiClient {
 	
 	static final String SERVER_ADDR = "localhost";
 	
-	static final Collection<Integer> PORTS = Lists.newArrayList(4444, 4445, 4446, 4447, 4448);
+	static final int[] PORTS = { 4444, 4445, 4446, 4447, 4448 };
 	
 	private static final String DEFAULT_CODE = "import java.util.function.Supplier;" + System.lineSeparator() + System.lineSeparator() +
 			"public class MyTask implements Supplier<String> {" + System.lineSeparator() +

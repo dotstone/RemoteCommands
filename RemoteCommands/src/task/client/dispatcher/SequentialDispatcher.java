@@ -21,7 +21,6 @@ public class SequentialDispatcher implements TaskDispatcher {
 	}
 	
 	private void process(NetSocket socket) {
-		System.out.println("Writing to socket");
 		socket.write(msg);
 	}
 
